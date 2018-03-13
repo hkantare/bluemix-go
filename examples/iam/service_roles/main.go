@@ -1,0 +1,60 @@
+package main
+
+import (
+	"flag"
+	"log"
+
+	"github.com/IBM-Bluemix/bluemix-go/models"
+
+	"github.com/IBM-Bluemix/bluemix-go/api/iam/iamv1"
+	"github.com/IBM-Bluemix/bluemix-go/api/resource/resourcev1/catalog"
+	"github.com/IBM-Bluemix/bluemix-go/session"
+	"github.com/IBM-Bluemix/bluemix-go/trace"
+)
+
+func main() {
+
+	var servicename string
+	flag.StringVar(&servicename, "service", "", "Name of the service offering")
+
+	trace.Logger = trace.NewLogger("true")
+	sess, err := session.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	iamClient, err := iamv1.New(sess)
+	if err != nil {
+		log.Fatal(err)
+	}
+	serviceRolesAPI := iamClient.ServiceRoles()
+	var roles []models.PolicyRole
+
+	if servicename == "" {
+		roles, err = serviceRolesAPI.ListSystemDefinedRoles()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+	} else {
+
+		catalogClient, err := catalog.New(sess)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		resCatalogAPI := catalogClient.ResourceCatalog()
+
+		service, err := resCatalogAPI.FindByName(servicename, true)
+		if err != nil {
+			log.Fatal(err)
+		}
+		roles, err = serviceRolesAPI.ListServiceRoles(service[0].Name)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(roles)
+
+	}
+
+}

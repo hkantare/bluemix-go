@@ -26,6 +26,12 @@ const (
 	IAMService ServiceName = ServiceName("iam")
 	//IAMPAPService
 	IAMPAPService ServiceName = ServiceName("iampap")
+	//resourceManagementService
+	ResourceManagementService ServiceName = ServiceName("resource-management")
+	//resourceControllerService
+	ResourceControllerService ServiceName = ServiceName("resource-controller")
+	//resourceCatalogervice
+	ResourceCatalogrService ServiceName = ServiceName("resource-catalog ")
 )
 
 //Config ...
@@ -58,6 +64,12 @@ type Config struct {
 	HTTPClient *http.Client
 
 	SSLDisable bool
+
+	Environment string
+
+	RegionID string
+
+	RegionType string
 }
 
 //Copy allows the configuration to be overriden or added

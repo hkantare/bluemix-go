@@ -61,10 +61,10 @@ func New(configs ...*bluemix.Config) (*Session, error) {
 	if c.RetryDelay == nil {
 		c.RetryDelay = helpers.Duration(30 * time.Second)
 	}
+
 	if c.EndpointLocator == nil {
 		c.EndpointLocator = endpoints.NewEndpointLocator(c.Region)
 	}
-
 	if c.Debug {
 		trace.Logger = trace.NewLogger("true")
 	}
