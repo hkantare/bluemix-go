@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"reflect"
+	"strings"
 )
 
 type GenericPaginatedResourcesHandler struct {
@@ -24,7 +25,9 @@ func (pr GenericPaginatedResourcesHandler) Resources(bytes []byte, curURL string
 	err := json.Unmarshal(bytes, &paginatedResources)
 
 	slicePtr := reflect.New(reflect.SliceOf(pr.resourceType))
-	err = json.Unmarshal([]byte(paginatedResources.ResourcesBytes), slicePtr.Interface())
+	dc := json.NewDecoder(strings.NewReader(string(paginatedResources.ResourcesBytes)))
+	dc.UseNumber()
+	err = dc.Decode(slicePtr.Interface())
 	slice := reflect.Indirect(slicePtr)
 
 	contents := make([]interface{}, 0, slice.Len())

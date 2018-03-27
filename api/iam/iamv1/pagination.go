@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/url"
 	"reflect"
+	"strings"
 )
 
 const _PageTokenQuery = "pagetoken"
@@ -38,7 +39,9 @@ func (pr IAMPaginatedResourcesHandler) Resources(bytes []byte, curPath string) (
 	}
 
 	slicePtr := reflect.New(reflect.SliceOf(pr.resourceType))
-	err = json.Unmarshal([]byte(paginatedResources.ResourcesBytes), slicePtr.Interface())
+	dc := json.NewDecoder(strings.NewReader(string(paginatedResources.ResourcesBytes)))
+	dc.UseNumber()
+	err = dc.Decode(slicePtr.Interface())
 	slice := reflect.Indirect(slicePtr)
 
 	contents := make([]interface{}, 0, slice.Len())

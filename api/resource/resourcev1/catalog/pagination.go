@@ -27,7 +27,9 @@ func (pr ResourceCatalogPaginatedResourcesHandler) Resources(bytes []byte, curPa
 	err := json.Unmarshal(bytes, &paginatedResources)
 
 	slicePtr := reflect.New(reflect.SliceOf(pr.resourceType))
-	err = json.Unmarshal([]byte(paginatedResources.ResourcesBytes), slicePtr.Interface())
+	dc := json.NewDecoder(strings.NewReader(string(paginatedResources.ResourcesBytes)))
+	dc.UseNumber()
+	err = dc.Decode(slicePtr.Interface())
 	slice := reflect.Indirect(slicePtr)
 
 	contents := make([]interface{}, 0, slice.Len())
