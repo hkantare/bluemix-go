@@ -80,6 +80,11 @@ type Config struct {
 	HTTPClient *http.Client
 
 	SSLDisable bool
+
+	ClientID        string
+	ClientSecret    string
+	UAAClientID     string
+	UAAClientSecret string
 }
 
 //Copy allows the configuration to be overriden or added

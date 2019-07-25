@@ -89,6 +89,22 @@ func New(configs ...*bluemix.Config) (*Session, error) {
 		trace.Logger = trace.NewLogger("true")
 	}
 
+	if len(c.ClientID) == 0 {
+		c.ClientID = helpers.EnvFallBack([]string{"IC_CLIENT_ID", "IBMCLOUD_CLIENT_ID"}, "bx")
+	}
+
+	if len(c.ClientSecret) == 0 {
+		c.ClientSecret = helpers.EnvFallBack([]string{"IC_CLIENT_SECRET", "IBMCLOUD_CLIENT_SECRET"}, "bx")
+	}
+
+	if len(c.UAAClientID) == 0 {
+		c.UAAClientID = helpers.EnvFallBack([]string{"IC_UAA_CLIENT_ID", "IBMCLOUD_UAA_CLIENT_ID"}, "cf")
+	}
+
+	if len(c.UAAClientSecret) == 0 {
+		c.UAAClientSecret = helpers.EnvFallBack([]string{"IC_UAA_CLIENT_SECRET", "IBMCLOUD_UAA_CLIENT_SECRET"}, "")
+	}
+
 	return sess, nil
 }
 

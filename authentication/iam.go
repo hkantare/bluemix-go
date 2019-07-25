@@ -102,11 +102,11 @@ func (auth *IAMAuthRepository) RefreshToken() (string, error) {
 }
 
 func (auth *IAMAuthRepository) getToken(data map[string]string) error {
-	request := rest.PostRequest(auth.endpoint+"/oidc/token").
-		Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte("bx:bx"))).
-		Field("response_type", "cloud_iam,uaa").
-		Field("uaa_client_id", "cf").
-		Field("uaa_client_secret", "")
+	request := rest.PostRequest(auth.endpoint+"/identity/token").
+		Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", auth.config.ClientID, auth.config.ClientSecret)))).
+		Field("response_type", "cloud_iam").
+		Field("uaa_client_id", auth.config.UAAClientID).
+		Field("uaa_client_secret", auth.config.UAAClientSecret)
 
 	for k, v := range data {
 		request.Field(k, v)

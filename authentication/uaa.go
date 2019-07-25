@@ -86,7 +86,7 @@ func (auth *UAARepository) RefreshToken() (string, error) {
 
 func (auth *UAARepository) getToken(data map[string]string) error {
 	request := rest.PostRequest(auth.endpoint+"/oauth/token").
-		Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte("cf:"))).
+		Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", auth.config.UAAClientID, auth.config.UAAClientSecret)))).
 		Field("scope", "")
 
 	for k, v := range data {
